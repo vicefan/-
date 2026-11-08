@@ -21,6 +21,7 @@ def scrape_jobs(url: str = URL) -> list[dict[str, str]]:
         raise RuntimeError("인하대학교 취업 프로그램 목록을 찾지 못했습니다.")
 
     jobs = []
+    seen_program_ids = set()
     for row in rows:
         row_text = row.get_text(" ", strip=True)
 
@@ -45,6 +46,9 @@ def scrape_jobs(url: str = URL) -> list[dict[str, str]]:
         )
         if not program_id:
             continue
+        if program_id in seen_program_ids:
+            continue
+        seen_program_ids.add(program_id)
 
         jobs.append(
             {
